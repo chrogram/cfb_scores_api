@@ -12,7 +12,11 @@ app.listen(PORT, () => {
 app.get("/status", (req, res) => {
     res.status(200).send("Server is running");
 
-});  
+});
+
+app.get("/", (req, res) => {
+    res.redirect('/top25/concise');
+})
 
 app.get("/top25", (req, res) => {
 
@@ -51,13 +55,18 @@ app.get("/top25/concise", (req, res) => {
             return {
                             startDate: game.game.startDate,
                             startTime: game.game.startTime,
+                            currentPeriod: game.game.currentPeriod,
+                            clock: game.game.contestClock,
                             teams: `${game.game.away.names.short} ${game.game.away.rank ? `(${game.game.away.rank})` : ""} vs ${game.game.home.names.short} ${game.game.home.rank ? `(${game.game.home.rank})` : ""}`.trim(),
                             score: `${game.game.away.score} - ${game.game.home.score}`,
+                            record: `${game.game.away.description} - ${game.game.home.description}`,
                         };
         });
         
         // Send the new array of ranked games as a JSON object
-        res.json({ top25Games: rankedGames });
+        res.json({ 
+            
+            top25Games: rankedGames });
     })
     .catch(error => {
         console.error('Fetch error:', error);
